@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerMoveComponent : MonoBehaviour
+public class PlayerMove : MonoBehaviour
 {
     public float speed = 1;
 
@@ -25,6 +25,8 @@ public class PlayerMoveComponent : MonoBehaviour
     private bool m_isFalling = false;
     [SerializeField]
     private bool m_hasLanded = false;
+
+    private Coroutine m_checkLandingCoroutin;
 
     // Once launched, player should be either falling or floating
     private bool IsMoving
@@ -185,6 +187,8 @@ public class PlayerMoveComponent : MonoBehaviour
         Rig.velocity = Vector3.up * 5;
         m_isFalling = true;
         m_isFloating = false;
+        IsOnGround = false;
+        IsOnFlower = false;
     }
 
     public void SetLaunchable()
@@ -212,7 +216,8 @@ public class PlayerMoveComponent : MonoBehaviour
         }
         else if (collision.gameObject.layer == 9)
         {
-            IsOnFlower = true;
+            if (collision.transform.parent.GetComponent<Flower>().hasLanded == false)
+                IsOnFlower = true;
         }
         else
         {
@@ -234,12 +239,18 @@ public class PlayerMoveComponent : MonoBehaviour
         return Physics.Raycast(transform.position, Vector3.down, _distance, 1 << LayerMask.NameToLayer("Ground"));
     }
 
-    public void StartWaitUntlLandOnSth(Action<Action> _callback)
+    public void StartWaitUntlLandOnSth(Action _callback)
     {
-        StartCoroutine(WaitUntilLandOnSth(_callback));
+        m_checkLandingCoroutin = StartCoroutine(WaitUntilLandOnSth(_callback));
     }
 
-    private IEnumerator WaitUntilLandOnSth(Action<Action> _callback)
+    public void StopWaitUnitLandOnSth()
+    {
+        StopCoroutine(m_checkLandingCoroutin);
+        m_checkLandingCoroutin = null;
+    }
+
+    private IEnumerator WaitUntilLandOnSth(Action _callback)
     {
         while (m_hasLanded == false)
         {
@@ -248,6 +259,6 @@ public class PlayerMoveComponent : MonoBehaviour
 
         print("Finally began camera moving");
         if (_callback != null)
-            _callback(SetLaunchable);
+            _callback();
     }
 }

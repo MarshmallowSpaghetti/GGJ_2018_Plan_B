@@ -17,6 +17,9 @@ public class Flower : MonoBehaviour
         }
     }
 
+    private PlayerMove m_contactPlayer;
+    public bool hasLanded = false;
+
     // Use this for initialization
     void Start()
     {
@@ -50,23 +53,51 @@ public class Flower : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Action<Action> afterLanding = (_callback) =>
+        Action afterLanding = () =>
         {
-            StartCoroutine(GrowNewOne(_callback));
+            hasLanded = true;
+            StartCoroutine(MoveCameraToFlowerCenter(other.transform.forward));
         };
 
         if (other.transform.parent.CompareTag("Player"))
         {
             print("Enter flower area");
-            other.transform.parent.GetComponent<PlayerMoveComponent>().StartWaitUntlLandOnSth(afterLanding);
+            m_contactPlayer = other.transform.parent.GetComponent<PlayerMove>();
+            m_contactPlayer.StartWaitUntlLandOnSth(afterLanding);
         }
     }
 
-    private IEnumerator GrowNewOne(Action _callbackFromPlayer)
+    private void OnTriggerExit(Collider other)
     {
+        if(m_contactPlayer != null)
+        {
+            if(m_contactPlayer != null)
+            {
+                m_contactPlayer.StopWaitUnitLandOnSth();
+            }
+        }
+    }
+
+    private IEnumerator MoveCameraToFlowerCenter(Vector3 _dir)
+    {
+        print("Move camera to center");
+        yield return new WaitForSeconds(0.5f);
+
+        print("Draw camera backward");
+        // Draw the camera backward to see the whole flower.
+        yield return new WaitForSeconds(0.5f);
+
+        yield return StartCoroutine(GrowNewOne(_dir));
+
+        // Make player moveable again
+        m_contactPlayer.SetLaunchable();
+    }
+
+    private IEnumerator GrowNewOne(Vector3 _faceDir)
+    {
+        Vector3 newPos = Quaternion.AngleAxis(UnityEngine.Random.Range(-30, 30), Vector3.up) * _faceDir.normalized * 20 + transform.position + Vector3.down * 5f;
         GameObject newFlower = GameObject.Instantiate(FlowerPrefab,
-                               transform.position
-                                   + new Vector3(UnityEngine.Random.Range(-20f, 20f), 0, UnityEngine.Random.Range(0f, 40f)) + Vector3.down * 5f,
+                               newPos,
                                Quaternion.identity,
                                transform.parent);
 
@@ -79,7 +110,5 @@ public class Flower : MonoBehaviour
         }
 
         print("Grow done");
-        if (_callbackFromPlayer != null)
-            _callbackFromPlayer();
     }
 }
