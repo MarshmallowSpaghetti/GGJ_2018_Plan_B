@@ -75,10 +75,13 @@ public class PlayerMoveComponent : MonoBehaviour
 
     private Rigidbody m_rig;
 
-    private void FixedUpdate()
+    private void Update()
     {
         LaucnCheck();
+    }
 
+    private void FixedUpdate()
+    {
         MoveFoward();
 
         ApplyGravity();
@@ -120,12 +123,25 @@ public class PlayerMoveComponent : MonoBehaviour
         {
             Launch();
         }
+
+        if(Input.GetKey(KeyCode.Space))
+        {
+            m_isFalling = false;
+            m_isFloating = true;
+        }
+
+        if(Input.GetKeyUp(KeyCode.Space))
+        {
+            m_isFalling = true;
+            m_isFloating = false;
+        }
     }
 
     private void Launch()
     {
         Rig.velocity = Vector3.up * 5;
         m_isFalling = true;
+        m_isFloating = false;
     }
 
     private void OnCollisionEnter(Collision collision)
