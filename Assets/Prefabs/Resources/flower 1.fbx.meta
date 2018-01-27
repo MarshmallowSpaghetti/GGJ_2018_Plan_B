@@ -111,7 +111,7 @@ ModelImporter:
     400102: joint9
     2100000: lambert2
     4300000: flower
-    7400000: swing
+    7400000: Swing
     9500000: //RootNode
     13700000: flower
   externalObjects:
@@ -147,7 +147,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: swing
+      name: Swing
       takeName: Take 001
       firstFrame: 0
       lastFrame: 48
@@ -157,7 +157,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
