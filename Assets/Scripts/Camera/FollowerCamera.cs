@@ -93,9 +93,12 @@ public class FollowerCamera : MonoBehaviour
         transform.position = Quaternion.AngleAxis(Vector3.SignedAngle(transform.forward.SetY(0), target.forward.SetY(0), Vector3.up), Vector3.up)
             * (transform.position - target.position) + target.position;
 
-        float forwardYOffset = transform.forward.y;
-        transform.forward = (target.position - transform.position).SetY(forwardYOffset);
+        //float forwardYOffset = transform.forward.y;
+        //transform.forward = (target.position - transform.position).SetY(forwardYOffset);
 
+        transform.forward = Quaternion.FromToRotation(transform.forward.SetY(0).normalized,
+            (target.position - transform.position).SetY(0).normalized) * transform.forward;
+        //print("forward " + transform.forward);
     }
 
     private void OnDrawGizmos()

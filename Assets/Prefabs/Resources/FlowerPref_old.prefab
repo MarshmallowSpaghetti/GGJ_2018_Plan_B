@@ -611,7 +611,7 @@ GameObject:
   - component: {fileID: 65420631274203834}
   - component: {fileID: 114321896723945270}
   m_Layer: 9
-  m_Name: FlowerPref
+  m_Name: FlowerPref_old
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1605,6 +1605,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dfcd84470cc43842849f0785a1a0473, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hasLanded: 0
 --- !u!136 &136107107033197538
 CapsuleCollider:
   m_ObjectHideFlags: 1

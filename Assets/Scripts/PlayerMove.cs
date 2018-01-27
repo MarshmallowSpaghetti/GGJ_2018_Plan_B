@@ -140,7 +140,7 @@ public class PlayerMove : MonoBehaviour
         m_motion = new Vector3(
             CrossPlatformInputManager.GetAxis("Horizontal"),
             0,
-            CrossPlatformInputManager.GetAxis("Vertical") + 0.3f);
+            CrossPlatformInputManager.GetAxis("Vertical") * gravityMultiplier + 0.07f);
 
         float angleInAFrame = 100 * Time.deltaTime;
 
@@ -184,7 +184,7 @@ public class PlayerMove : MonoBehaviour
 
     private void Launch()
     {
-        Rig.velocity = Vector3.up * 5;
+        Rig.velocity = Vector3.up * 0.7f;
         m_isFalling = true;
         m_isFloating = false;
         IsOnGround = false;

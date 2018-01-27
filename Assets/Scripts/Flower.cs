@@ -12,7 +12,7 @@ public class Flower : MonoBehaviour
         get
         {
             if (m_flowerPrefab == null)
-                m_flowerPrefab = Resources.Load<GameObject>("FlowerPref");
+                m_flowerPrefab = Resources.Load<GameObject>("Flower_Pref");
             return m_flowerPrefab;
         }
     }
