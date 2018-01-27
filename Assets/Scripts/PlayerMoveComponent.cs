@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
@@ -10,9 +11,11 @@ public class PlayerMoveComponent : MonoBehaviour
 
     private Vector3 m_motion;
     private bool m_isOnGround;
+    private bool m_isOnFlower;
 
     public Action onHitGround;
-    public Action<Vector3> onBounceFromGround;
+    public Action<Vector3> onLandOnGround;
+    public Action onHitFlower;
 
     public float gravityMultiplier = 0.2f;
 
@@ -20,6 +23,8 @@ public class PlayerMoveComponent : MonoBehaviour
     private bool m_isFloating = false;
     [SerializeField]
     private bool m_isFalling = false;
+    [SerializeField]
+    private bool m_hasLanded = false;
 
     // Once launched, player should be either falling or floating
     private bool IsMoving
@@ -66,14 +71,52 @@ public class PlayerMoveComponent : MonoBehaviour
                 //Rig.velocity = Vector3.zero;
 
                 m_isOnGround = value;
-                print("Hit on ground");
+                //print("Hit on ground");
                 if (onHitGround != null)
                     onHitGround();
             }
         }
     }
 
+    public bool IsOnFlower
+    {
+        get
+        {
+            return m_isOnFlower;
+        }
+
+        set
+        {
+            if(m_isOnFlower == true && value == false)
+            {
+                m_isOnFlower = value;
+            }
+            else if(m_isOnFlower == false && value == true)
+            {
+                m_isOnFlower = value;
+                //print("Land on flower");
+                if (onHitFlower != null)
+                    onHitFlower();
+            }
+            m_isOnFlower = value;
+        }
+    }
+
     private Rigidbody m_rig;
+
+    private void Awake()
+    {
+        Action landOnSth = () =>
+        {
+            print("petal land on sth");
+            m_isFalling = false;
+            m_isFloating = false;
+            Rig.isKinematic = true;
+            m_hasLanded = true;
+        };
+        onHitGround = landOnSth;
+        onHitFlower = landOnSth;
+    }
 
     private void Update()
     {
@@ -144,18 +187,28 @@ public class PlayerMoveComponent : MonoBehaviour
         m_isFloating = false;
     }
 
+    public void SetLaunchable()
+    {
+
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         //print("collide with " + collision.gameObject.layer);
         // We give player control only when player land on ground
         if (collision.gameObject.layer == 8)
         {
-            bool isOnGroundBefore = m_isOnGround;
+            //bool isOnGroundBefore = m_isOnGround;
             IsOnGround = true;
-            if (isOnGroundBefore == false && onBounceFromGround != null)
-            {
-                onBounceFromGround(collision.relativeVelocity);
-            }
+            //print("Land on ground");
+            //if (isOnGroundBefore == false && onLandOnGround != null)
+            //{
+            //    onLandOnGround(collision.relativeVelocity);
+            //}
+        }
+        else if (collision.gameObject.layer == 9)
+        {
+            IsOnFlower = true;
         }
         else
         {
@@ -175,5 +228,22 @@ public class PlayerMoveComponent : MonoBehaviour
     private bool CheckGroundInRange(float _distance)
     {
         return Physics.Raycast(transform.position, Vector3.down, _distance, 1 << LayerMask.NameToLayer("Ground"));
+    }
+
+    public void StartWaitUntlLandOnSth(Action _callback)
+    {
+        StartCoroutine(WaitUntilLandOnSth(_callback));
+    }
+
+    private IEnumerator WaitUntilLandOnSth(Action _callback)
+    {
+        while(m_hasLanded == false)
+        {
+            yield return null;
+        }
+
+        print("Finally began camera moving");
+        if (_callback != null)
+            _callback();
     }
 }
