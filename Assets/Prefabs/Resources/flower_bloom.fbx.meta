@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: c56782fab6e031b4e97a0c3f64ba19df
-timeCreated: 1517071329
+guid: 1748da147d9e984419174995adbe7ca6
+timeCreated: 1517088823
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
@@ -111,20 +111,15 @@ ModelImporter:
     400102: joint9
     2100000: lambert2
     4300000: flower
-    7400000: swing
+    7400000: bloom
     9500000: //RootNode
     13700000: flower
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: lambert2
-    second: {fileID: 2100000, guid: b78123fac4cbb2a42b615cd1097a86af, type: 2}
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
     materialSearch: 1
-    materialLocation: 0
+    materialLocation: 1
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
@@ -147,10 +142,10 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: swing
+      name: bloom
       takeName: Take 001
-      firstFrame: 0
-      lastFrame: 48
+      firstFrame: 49
+      lastFrame: 72
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
