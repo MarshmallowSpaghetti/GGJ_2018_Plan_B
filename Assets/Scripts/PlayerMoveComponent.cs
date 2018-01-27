@@ -16,6 +16,22 @@ public class PlayerMoveComponent : MonoBehaviour
 
     public float gravityMultiplier = 0.2f;
 
+    [SerializeField]
+    private bool m_isFloating = false;
+    [SerializeField]
+    private bool m_isFalling = false;
+
+    // Once launched, player should be either falling or floating
+    private bool IsMoving
+    {
+        get
+        {
+            return m_isFloating || m_isFalling;
+        }
+    }
+
+    private float m_airFraction = 0.15f;
+
     public Rigidbody Rig
     {
         get
@@ -61,45 +77,18 @@ public class PlayerMoveComponent : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // If the character is in the air, do nothing
-        //if (CharController.enabled == false)
-        //    return;
+        LaucnCheck();
 
-        //MoveWhileFaceMouse();
-        MoveInForward();
+        MoveFoward();
 
-        // Apply gravity
-        //CharController.Move(Rig.velocity + Physics.gravity * Time.deltaTime);
-        //print("gravity " + Rig.velocity + Physics.gravity * Time.deltaTime);
-
-        if (Input.GetKeyDown(KeyCode.Space))
-            FloatForAWhile();
+        ApplyGravity();
     }
 
-    private void MoveWhileFaceMouse()
+    private void MoveFoward()
     {
-        m_motion = new Vector3(
-            CrossPlatformInputManager.GetAxis("Horizontal"),
-            0,
-            CrossPlatformInputManager.GetAxis("Vertical"));
+        if (IsMoving == false)
+            return;
 
-        //CharController.Move(m_motion * speed);
-
-        float yVel = Rig.velocity.y;
-        Rig.velocity = (m_motion * speed / Time.fixedDeltaTime).SetY(yVel);
-
-        Rig.velocity += Physics.gravity * Time.fixedDeltaTime * gravityMultiplier;
-
-        // Always keep in horizontal plane
-        transform.forward =
-            Vector3.Slerp(transform.forward,
-            (MouseInput.Instance.MousePos - transform.position).SetY(0), 0.2f);
-        // Without lerp
-        //transform.forward = (MouseInput.Instance.MousePos - transform.position).SetY(0);
-    }
-
-    private void MoveInForward()
-    {
         m_motion = new Vector3(
             CrossPlatformInputManager.GetAxis("Horizontal"),
             0,
@@ -110,12 +99,33 @@ public class PlayerMoveComponent : MonoBehaviour
         transform.Rotate(Vector3.up, angleInAFrame * m_motion.x);
         float yVel = Rig.velocity.y;
         Rig.velocity = (transform.rotation * new Vector3(0, 0, m_motion.z * speed)).SetY(yVel);
-        Rig.velocity += Physics.gravity * Time.fixedDeltaTime * gravityMultiplier;
+        //Rig.velocity += Physics.gravity * Time.fixedDeltaTime * gravityMultiplier;
+        //Rig.MovePosition(Rig.position + Vector3.down * gravityMultiplier);
     }
 
-    private void FloatForAWhile()
+    private void ApplyGravity()
     {
-        Rig.velocity = Vector3.up;
+        if (m_isFalling)
+        {
+            Rig.velocity += (Physics.gravity * gravityMultiplier
+                - Physics.gravity.normalized * Vector3.Dot(Rig.velocity, Physics.gravity) * m_airFraction) * Time.fixedDeltaTime;
+
+            //print("Falling velocity " + Rig.velocity);
+        }
+    }
+
+    private void LaucnCheck()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            Launch();
+        }
+    }
+
+    private void Launch()
+    {
+        Rig.velocity = Vector3.up * 5;
+        m_isFalling = true;
     }
 
     private void OnCollisionEnter(Collision collision)
