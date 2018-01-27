@@ -87,11 +87,11 @@ public class PlayerMoveComponent : MonoBehaviour
 
         set
         {
-            if(m_isOnFlower == true && value == false)
+            if (m_isOnFlower == true && value == false)
             {
                 m_isOnFlower = value;
             }
-            else if(m_isOnFlower == false && value == true)
+            else if (m_isOnFlower == false && value == true)
             {
                 m_isOnFlower = value;
                 //print("Land on flower");
@@ -162,18 +162,18 @@ public class PlayerMoveComponent : MonoBehaviour
 
     private void LaucnCheck()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             Launch();
         }
 
-        if(Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space))
         {
             m_isFalling = false;
             m_isFloating = true;
         }
 
-        if(Input.GetKeyUp(KeyCode.Space))
+        if (Input.GetKeyUp(KeyCode.Space))
         {
             m_isFalling = true;
             m_isFloating = false;
@@ -189,7 +189,11 @@ public class PlayerMoveComponent : MonoBehaviour
 
     public void SetLaunchable()
     {
-
+        print("Enable relaunch");
+        m_isFalling = false;
+        m_isFloating = false;
+        Rig.isKinematic = false;
+        m_hasLanded = false;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -230,20 +234,20 @@ public class PlayerMoveComponent : MonoBehaviour
         return Physics.Raycast(transform.position, Vector3.down, _distance, 1 << LayerMask.NameToLayer("Ground"));
     }
 
-    public void StartWaitUntlLandOnSth(Action _callback)
+    public void StartWaitUntlLandOnSth(Action<Action> _callback)
     {
         StartCoroutine(WaitUntilLandOnSth(_callback));
     }
 
-    private IEnumerator WaitUntilLandOnSth(Action _callback)
+    private IEnumerator WaitUntilLandOnSth(Action<Action> _callback)
     {
-        while(m_hasLanded == false)
+        while (m_hasLanded == false)
         {
             yield return null;
         }
 
         print("Finally began camera moving");
         if (_callback != null)
-            _callback();
+            _callback(SetLaunchable);
     }
 }

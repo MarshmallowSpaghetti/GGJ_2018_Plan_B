@@ -50,9 +50,9 @@ public class Flower : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Action afterLanding = () =>
+        Action<Action> afterLanding = (_callback) =>
         {
-            StartCoroutine(GrowNewOne());
+            StartCoroutine(GrowNewOne(_callback));
         };
 
         if (other.transform.parent.CompareTag("Player"))
@@ -62,7 +62,7 @@ public class Flower : MonoBehaviour
         }
     }
 
-    private IEnumerator GrowNewOne()
+    private IEnumerator GrowNewOne(Action _callbackFromPlayer)
     {
         GameObject newFlower = GameObject.Instantiate(FlowerPrefab,
                                transform.position
@@ -79,5 +79,7 @@ public class Flower : MonoBehaviour
         }
 
         print("Grow done");
+        if (_callbackFromPlayer != null)
+            _callbackFromPlayer();
     }
 }
