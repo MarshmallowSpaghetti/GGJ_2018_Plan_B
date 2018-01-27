@@ -333,7 +333,7 @@ Prefab:
 Transform:
   m_PrefabParentObject: {fileID: 4534579762717330, guid: 6147d4ce27040d74ebd1a24493a4289f,
     type: 2}
-  m_PrefabInternal: {fileID: 2080189198}
+  m_PrefabInternal: {fileID: 1789039123}
 --- !u!1 &507962813
 GameObject:
   m_ObjectHideFlags: 0
@@ -840,7 +840,7 @@ MonoBehaviour:
     height: 0.2
   target: {fileID: 855025541}
   isAlwaysBehind: 0
---- !u!1001 &2080189198
+--- !u!1001 &1789039123
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -857,7 +857,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4534579762717330, guid: 6147d4ce27040d74ebd1a24493a4289f, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 31.48
+      value: 33.09
       objectReference: {fileID: 0}
     - target: {fileID: 4534579762717330, guid: 6147d4ce27040d74ebd1a24493a4289f, type: 2}
       propertyPath: m_LocalRotation.x
@@ -881,13 +881,18 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 65420631274203834, guid: 6147d4ce27040d74ebd1a24493a4289f,
         type: 2}
-      propertyPath: m_Center.y
-      value: 0
+      propertyPath: m_Size.x
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 65420631274203834, guid: 6147d4ce27040d74ebd1a24493a4289f,
         type: 2}
-      propertyPath: m_Size.y
-      value: 12
+      propertyPath: m_Size.z
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 65420631274203834, guid: 6147d4ce27040d74ebd1a24493a4289f,
+        type: 2}
+      propertyPath: m_Center.z
+      value: 0.79
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6147d4ce27040d74ebd1a24493a4289f, type: 2}
