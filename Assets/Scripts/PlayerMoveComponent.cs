@@ -71,6 +71,9 @@ public class PlayerMoveComponent : MonoBehaviour
         // Apply gravity
         //CharController.Move(Rig.velocity + Physics.gravity * Time.deltaTime);
         //print("gravity " + Rig.velocity + Physics.gravity * Time.deltaTime);
+
+        if (Input.GetKeyDown(KeyCode.Space))
+            FloatForAWhile();
     }
 
     private void MoveWhileFaceMouse()
@@ -100,7 +103,7 @@ public class PlayerMoveComponent : MonoBehaviour
         m_motion = new Vector3(
             CrossPlatformInputManager.GetAxis("Horizontal"),
             0,
-            CrossPlatformInputManager.GetAxis("Vertical"));
+            CrossPlatformInputManager.GetAxis("Vertical") + 0.3f);
 
         float angleInAFrame = 100 * Time.deltaTime;
 
@@ -108,6 +111,11 @@ public class PlayerMoveComponent : MonoBehaviour
         float yVel = Rig.velocity.y;
         Rig.velocity = (transform.rotation * new Vector3(0, 0, m_motion.z * speed)).SetY(yVel);
         Rig.velocity += Physics.gravity * Time.fixedDeltaTime * gravityMultiplier;
+    }
+
+    private void FloatForAWhile()
+    {
+        Rig.velocity = Vector3.up;
     }
 
     private void OnCollisionEnter(Collision collision)

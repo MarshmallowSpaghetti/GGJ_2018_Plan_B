@@ -380,15 +380,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4168830566679002, guid: 0a4d4a2dbcbae7d4fab8ae97e8c7de85, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 10
+      value: 7.4
       objectReference: {fileID: 0}
     - target: {fileID: 4168830566679002, guid: 0a4d4a2dbcbae7d4fab8ae97e8c7de85, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -10
+      value: -11.5
       objectReference: {fileID: 0}
     - target: {fileID: 4168830566679002, guid: 0a4d4a2dbcbae7d4fab8ae97e8c7de85, type: 2}
       propertyPath: m_LocalRotation.x
-      value: 0.38268343
+      value: 0.2588191
       objectReference: {fileID: 0}
     - target: {fileID: 4168830566679002, guid: 0a4d4a2dbcbae7d4fab8ae97e8c7de85, type: 2}
       propertyPath: m_LocalRotation.y
@@ -400,7 +400,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4168830566679002, guid: 0a4d4a2dbcbae7d4fab8ae97e8c7de85, type: 2}
       propertyPath: m_LocalRotation.w
-      value: 0.92387956
+      value: 0.9659258
       objectReference: {fileID: 0}
     - target: {fileID: 4168830566679002, guid: 0a4d4a2dbcbae7d4fab8ae97e8c7de85, type: 2}
       propertyPath: m_RootOrder
@@ -416,6 +416,20 @@ Prefab:
       propertyPath: target
       value: 
       objectReference: {fileID: 855025541}
+    - target: {fileID: 4168830566679002, guid: 0a4d4a2dbcbae7d4fab8ae97e8c7de85, type: 2}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 114961516770861020, guid: 0a4d4a2dbcbae7d4fab8ae97e8c7de85,
+        type: 2}
+      propertyPath: incline
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 114670366588280698, guid: 0a4d4a2dbcbae7d4fab8ae97e8c7de85,
+        type: 2}
+      propertyPath: isAlwaysBehind
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0a4d4a2dbcbae7d4fab8ae97e8c7de85, type: 2}
   m_IsPrefabParent: 0
@@ -776,3 +790,4 @@ MonoBehaviour:
     width: 0.2
     height: 0.2
   target: {fileID: 855025541}
+  isAlwaysBehind: 0

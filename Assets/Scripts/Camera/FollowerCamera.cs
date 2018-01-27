@@ -11,6 +11,8 @@ public class FollowerCamera : MonoBehaviour
     private Camera m_camera;
     private Vector3 m_previousPos;
 
+    public bool isAlwaysBehind;
+
     public Camera ThisCamera
     {
         get
@@ -34,6 +36,8 @@ public class FollowerCamera : MonoBehaviour
         //DrawRect();
 
         CheckTargetViewportPos();
+
+        RotateCamera();
     }
 
     private void CheckTargetViewportPos()
@@ -77,6 +81,21 @@ public class FollowerCamera : MonoBehaviour
         }
 
         m_previousPos = targetViewportPos;
+    }
+
+    private void RotateCamera()
+    {
+        if (isAlwaysBehind == false)
+            return;
+        
+        float yOffset = transform.position.y - target.position.y;
+
+        transform.position = Quaternion.AngleAxis(Vector3.SignedAngle(transform.forward.SetY(0), target.forward.SetY(0), Vector3.up), Vector3.up)
+            * (transform.position - target.position) + target.position;
+
+        float forwardYOffset = transform.forward.y;
+        transform.forward = (target.position - transform.position).SetY(forwardYOffset);
+
     }
 
     private void OnDrawGizmos()
