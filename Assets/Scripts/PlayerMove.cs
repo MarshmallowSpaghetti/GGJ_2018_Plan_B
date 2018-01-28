@@ -153,10 +153,7 @@ public class PlayerMove : MonoBehaviour
     {
         Action landOnSth = () =>
         {
-            m_isFalling = false;
-            m_isFloating = false;
-            Rig.isKinematic = true;
-            m_hasLanded = true;
+            DisableLaunch();
         };
         //onHitGround += landOnSth;
         onHitFlower += landOnSth;
@@ -200,6 +197,14 @@ public class PlayerMove : MonoBehaviour
 
             //print("Falling velocity " + Rig.velocity);
         }
+    }
+
+    public void DisableLaunch()
+    {
+        m_isFalling = false;
+        m_isFloating = false;
+        Rig.isKinematic = true;
+        m_hasLanded = true;
     }
 
     public void SetLaunchable()

@@ -19,6 +19,9 @@ public class Player : MonoBehaviour
     [SerializeField]
     private bool m_IsDisabled = false;
 
+    public Flower startFlower;
+    public Flower lastFlower;
+
     private Rigidbody m_rig;
     public Rigidbody Rig
     {
@@ -86,7 +89,13 @@ public class Player : MonoBehaviour
             }
             m_energyCount = m_energyCountDown;
         };
-        m_energyCount = m_energyCountDown;
+        //m_energyCount = m_energyCountDown;
+    }
+
+    private void Start()
+    {
+        ThisPlayerMove.DisableLaunch();
+        StartCoroutine(MoveToFlower(startFlower));
     }
 
     private void Update()
@@ -97,6 +106,9 @@ public class Player : MonoBehaviour
     private void LaucnCheck()
     {
         if (m_IsDisabled)
+            return;
+
+        if (lastFlower == null)
             return;
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -150,5 +162,40 @@ public class Player : MonoBehaviour
         m_IsDisabled = true;
         ThisPlayerMove.IsFalling = true;
         ThisPlayerMove.IsFloating = false;
+    }
+
+    private IEnumerator MoveToFlower(Flower _target)
+    {
+        skinRenderer.enabled = false;
+
+        if (_target.HasLanded == false)
+            _target.HasLanded = true;
+
+        while((transform.position - _target.flowerCenter.position).sqrMagnitude > 0.01f)
+        {
+            Rig.MovePosition(Vector3.Lerp(transform.position, _target.flowerCenter.position, 0.02f));
+
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(0.5f);
+
+        yield return StartCoroutine(RaiseFromFlower(_target));
+    }
+
+    private IEnumerator RaiseFromFlower(Flower _target)
+    {
+        skinRenderer.enabled = true;
+
+        while(transform.position.y < _target.flowerCenter.position.y + 1)
+        {
+            Rig.MovePosition(transform.position + Vector3.up * Time.deltaTime * 0.1f);
+
+            yield return null;
+        }
+
+        lastFlower = startFlower;
+        m_energyCount = m_energyCountDown;
+        ThisPlayerMove.SetLaunchable();
     }
 }

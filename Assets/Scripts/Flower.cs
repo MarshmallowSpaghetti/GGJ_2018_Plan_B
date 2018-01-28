@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Flower : MonoBehaviour
 {
+    public Transform flowerCenter;
+
     private GameObject m_flowerPrefab;
 
     public GameObject FlowerPrefab
