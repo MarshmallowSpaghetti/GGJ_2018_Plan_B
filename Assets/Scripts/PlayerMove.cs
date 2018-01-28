@@ -26,7 +26,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField]
     private bool m_hasLanded = false;
 
-    private Coroutine m_checkLandingCoroutin;
+    private Coroutine m_checkLandingCoroutine;
 
     // Once launched, player should be either falling or floating
     private bool IsMoving
@@ -104,25 +104,45 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+    public bool IsFloating
+    {
+        get
+        {
+            return m_isFloating;
+        }
+
+        set
+        {
+            m_isFloating = value;
+        }
+    }
+
+    public bool IsFalling
+    {
+        get
+        {
+            return m_isFalling;
+        }
+
+        set
+        {
+            m_isFalling = value;
+        }
+    }
+
     private Rigidbody m_rig;
 
     private void Awake()
     {
         Action landOnSth = () =>
         {
-            print("petal land on sth");
             m_isFalling = false;
             m_isFloating = false;
             Rig.isKinematic = true;
             m_hasLanded = true;
         };
-        onHitGround = landOnSth;
-        onHitFlower = landOnSth;
-    }
-
-    private void Update()
-    {
-        LaucnCheck();
+        onHitGround += landOnSth;
+        onHitFlower += landOnSth;
     }
 
     private void FixedUpdate()
@@ -162,35 +182,6 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    private void LaucnCheck()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Launch();
-        }
-
-        if (Input.GetKey(KeyCode.Space))
-        {
-            m_isFalling = false;
-            m_isFloating = true;
-        }
-
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            m_isFalling = true;
-            m_isFloating = false;
-        }
-    }
-
-    private void Launch()
-    {
-        Rig.velocity = Vector3.up * 0.7f;
-        m_isFalling = true;
-        m_isFloating = false;
-        IsOnGround = false;
-        IsOnFlower = false;
-    }
-
     public void SetLaunchable()
     {
         print("Enable relaunch");
@@ -216,7 +207,7 @@ public class PlayerMove : MonoBehaviour
         }
         else if (collision.gameObject.layer == 9)
         {
-            if (collision.transform.parent.GetComponent<Flower>().hasLanded == false)
+            if (collision.transform.parent.GetComponent<Flower>().HasLanded == false)
                 IsOnFlower = true;
         }
         else
@@ -234,20 +225,15 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    private bool CheckGroundInRange(float _distance)
-    {
-        return Physics.Raycast(transform.position, Vector3.down, _distance, 1 << LayerMask.NameToLayer("Ground"));
-    }
-
     public void StartWaitUntlLandOnSth(Action _callback)
     {
-        m_checkLandingCoroutin = StartCoroutine(WaitUntilLandOnSth(_callback));
+        m_checkLandingCoroutine = StartCoroutine(WaitUntilLandOnSth(_callback));
     }
 
     public void StopWaitUnitLandOnSth()
     {
-        StopCoroutine(m_checkLandingCoroutin);
-        m_checkLandingCoroutin = null;
+        StopCoroutine(m_checkLandingCoroutine);
+        m_checkLandingCoroutine = null;
     }
 
     private IEnumerator WaitUntilLandOnSth(Action _callback)

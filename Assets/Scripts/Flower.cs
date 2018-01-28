@@ -17,8 +17,29 @@ public class Flower : MonoBehaviour
         }
     }
 
+    public bool HasLanded
+    {
+        get
+        {
+            return m_hasLanded;
+        }
+
+        set
+        {
+            if(m_hasLanded == false && value == true)
+            {
+                Collider[] colliders = GetComponentsInChildren<Collider>();
+                for(int i = 0;i <colliders.Length;++i)
+                {
+                    GameObject.Destroy(colliders[i]);
+                }
+            }
+            m_hasLanded = value;
+        }
+    }
+
     private PlayerMove m_contactPlayer;
-    public bool hasLanded = false;
+    private bool m_hasLanded = false;
 
     // Use this for initialization
     void Start()
@@ -55,7 +76,7 @@ public class Flower : MonoBehaviour
     {
         Action afterLanding = () =>
         {
-            hasLanded = true;
+            HasLanded = true;
             StartCoroutine(MoveCameraToFlowerCenter(other.transform.parent.forward));
         };
 
