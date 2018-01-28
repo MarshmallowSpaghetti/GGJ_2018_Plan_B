@@ -28,6 +28,8 @@ public class PlayerMove : MonoBehaviour
 
     private Coroutine m_checkLandingCoroutine;
 
+    private Player m_thisPlayer;
+
     // Once launched, player should be either falling or floating
     private bool IsMoving
     {
@@ -130,6 +132,21 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+    public Player ThisPlayer
+    {
+        get
+        {
+            if (m_thisPlayer == null)
+                m_thisPlayer = GetComponent<Player>();
+            return m_thisPlayer;
+        }
+
+        set
+        {
+            m_thisPlayer = value;
+        }
+    }
+
     private Rigidbody m_rig;
 
     private void Awake()
@@ -141,7 +158,7 @@ public class PlayerMove : MonoBehaviour
             Rig.isKinematic = true;
             m_hasLanded = true;
         };
-        onHitGround += landOnSth;
+        //onHitGround += landOnSth;
         onHitFlower += landOnSth;
     }
 
@@ -155,6 +172,9 @@ public class PlayerMove : MonoBehaviour
     private void MoveFoward()
     {
         if (IsMoving == false)
+            return;
+
+        if (ThisPlayer.IsDisabled)
             return;
 
         m_motion = new Vector3(

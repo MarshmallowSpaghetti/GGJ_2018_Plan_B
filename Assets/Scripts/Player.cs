@@ -13,6 +13,12 @@ public class Player : MonoBehaviour
 
     private PlayerMove m_playerMove;
 
+    public SkinnedMeshRenderer skinRenderer;
+    private Material m_mat;
+
+    [SerializeField]
+    private bool m_IsDisabled = false;
+
     private Rigidbody m_rig;
     public Rigidbody Rig
     {
@@ -44,12 +50,36 @@ public class Player : MonoBehaviour
         }
     }
 
+    private Material Mat
+    {
+        get
+        {
+            if (m_mat == null)
+                m_mat = skinRenderer.material;
+
+            return m_mat;
+        }
+    }
+
+    public bool IsDisabled
+    {
+        get
+        {
+            return m_IsDisabled;
+        }
+
+        set
+        {
+            m_IsDisabled = value;
+        }
+    }
+
     private void Awake()
     {
         ThisPlayerMove.onHitFlower += () =>
         {
             print("Hit on flower");
-            if(m_energyCosting != null)
+            if (m_energyCosting != null)
             {
                 StopCoroutine(m_energyCosting);
                 m_energyCosting = null;
@@ -66,6 +96,9 @@ public class Player : MonoBehaviour
 
     private void LaucnCheck()
     {
+        if (m_IsDisabled)
+            return;
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Launch();
@@ -97,13 +130,25 @@ public class Player : MonoBehaviour
 
     private IEnumerator KeepUsingEnergy()
     {
-        while(m_energyCount > 0)
+        Color origin = Mat.GetColor("_EmissionColor");
+        while (m_energyCount > 0)
         {
-
+            Color color = origin *
+                (m_energyCount * 1f) / (m_energyCountDown * 1f);
+            //print("color " + color);
+            Mat.SetColor("_EmissionColor", color);
             m_energyCount--;
             yield return null;
         }
 
         print("No more energy");
+        UseupEnergy();
+    }
+
+    private void UseupEnergy()
+    {
+        m_IsDisabled = true;
+        ThisPlayerMove.IsFalling = true;
+        ThisPlayerMove.IsFloating = false;
     }
 }
