@@ -116,21 +116,30 @@ public class Flower : MonoBehaviour
 
     private IEnumerator GrowNewOne(Vector3 _faceDir)
     {
-        Vector3 newPos = Quaternion.AngleAxis(UnityEngine.Random.Range(-30, 30), Vector3.up) * _faceDir.normalized * 20 + transform.position;
+        Vector3 newPos = Quaternion.AngleAxis(UnityEngine.Random.Range(-30, 30), Vector3.up) * _faceDir.normalized * UnityEngine.Random.Range(5f,20f) + transform.position;
         GameObject newFlower = GameObject.Instantiate(FlowerPrefab,
                                newPos,
                                Quaternion.LookRotation(new Vector3(UnityEngine.Random.Range(-1,1),0, UnityEngine.Random.Range(-1,1))),
                                transform.parent);
         newFlower.GetComponent<Animator>().Play("bloom");
 
-        //int cnt = 150;
-        //while (cnt > 0)
-        //{
-        //    cnt--;
-        //    newFlower.transform.position += Vector3.up * 0.05f;
-        //    yield return null;
-        //}
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(0.5f);
+
+        Vector3 newPos1 = Quaternion.AngleAxis(UnityEngine.Random.Range(-60, -45), Vector3.up) * _faceDir.normalized * UnityEngine.Random.Range(5f, 20f) + transform.position;
+        GameObject newFlower1 = GameObject.Instantiate(FlowerPrefab,
+                               newPos1,
+                               Quaternion.LookRotation(new Vector3(UnityEngine.Random.Range(-1, 1), 0, UnityEngine.Random.Range(-1, 1))),
+                               transform.parent);
+        newFlower1.GetComponent<Animator>().Play("bloom");
+        yield return new WaitForSeconds(0.5f);
+
+        Vector3 newPos2 = Quaternion.AngleAxis(UnityEngine.Random.Range(45, 60), Vector3.up) * _faceDir.normalized * UnityEngine.Random.Range(5f, 20f) + transform.position;
+        GameObject newFlower2 = GameObject.Instantiate(FlowerPrefab,
+                               newPos2,
+                               Quaternion.LookRotation(new Vector3(UnityEngine.Random.Range(-1, 1), 0, UnityEngine.Random.Range(-1, 1))),
+                               transform.parent);
+        newFlower2.GetComponent<Animator>().Play("bloom");
+        yield return new WaitForSeconds(0.5f);
 
         print("Grow done");
     }
