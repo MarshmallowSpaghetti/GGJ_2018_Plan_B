@@ -9,7 +9,7 @@ public class GameController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        new SingleAudio("BGM_LOOP", AudioLayer.Bgm).Play();
+        new SingleAudio("Enochian_Magic", AudioLayer.Bgm).Play();
     }
 
     // Update is called once per frame
