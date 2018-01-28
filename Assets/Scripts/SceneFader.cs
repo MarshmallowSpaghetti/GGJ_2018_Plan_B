@@ -15,7 +15,7 @@ public class SceneFader : MonoBehaviour {
 	#region MONOBHEAVIOR
 	void OnEnable()
 	{
-		StartCoroutine(Fade(FadeDirection.Out));
+		//StartCoroutine(Fade(FadeDirection.In));
 	}
 	#endregion
 	#region FADE
@@ -43,8 +43,8 @@ public class SceneFader : MonoBehaviour {
 	#region HELPERS
 	public IEnumerator FadeAndLoadScene(FadeDirection fadeDirection, string sceneToLoad) 
 	{
-		yield return Fade(fadeDirection);
-		SceneManager.LoadScene(sceneToLoad);
+		yield return (Fade(fadeDirection));
+		//SceneManager.LoadScene(sceneToLoad);
 	}
 	private void SetColorImage(ref float alpha, FadeDirection fadeDirection)
 	{
