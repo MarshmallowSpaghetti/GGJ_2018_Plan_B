@@ -28,10 +28,10 @@ public class Flower : MonoBehaviour
 
         set
         {
-            if(m_hasLanded == false && value == true)
+            if (m_hasLanded == false && value == true)
             {
                 Collider[] colliders = GetComponentsInChildren<Collider>();
-                for(int i = 0;i <colliders.Length;++i)
+                for (int i = 0; i < colliders.Length; ++i)
                 {
                     GameObject.Destroy(colliders[i]);
                 }
@@ -92,36 +92,37 @@ public class Flower : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if(m_contactPlayer != null)
+        if (m_contactPlayer != null)
         {
-            if(m_contactPlayer != null)
-            {
-                m_contactPlayer.StopWaitUnitLandOnSth();
-            }
+            m_contactPlayer.StopWaitUnitLandOnSth();
+            m_contactPlayer = null;
         }
     }
 
     private IEnumerator MoveCameraToFlowerCenter(Vector3 _dir)
     {
-        print("Move camera to center");
-        yield return new WaitForSeconds(0.5f);
+        //print("Move camera to center");
+        //yield return new WaitForSeconds(0.5f);
 
-        print("Draw camera backward");
-        // Draw the camera backward to see the whole flower.
-        yield return new WaitForSeconds(0.5f);
+        //print("Draw camera backward");
+        //// Draw the camera backward to see the whole flower.
+        //yield return new WaitForSeconds(0.5f);
 
         yield return StartCoroutine(GrowNewOne(_dir));
 
+        yield return StartCoroutine(
+            m_contactPlayer.GetComponent<Player>().MoveToFlower(this));
+
         // Make player moveable again
-        m_contactPlayer.SetLaunchable();
+        //m_contactPlayer.SetLaunchable();
     }
 
     private IEnumerator GrowNewOne(Vector3 _faceDir)
     {
-        Vector3 newPos = Quaternion.AngleAxis(UnityEngine.Random.Range(-30, 30), Vector3.up) * _faceDir.normalized * UnityEngine.Random.Range(5f,20f) + transform.position;
+        Vector3 newPos = Quaternion.AngleAxis(UnityEngine.Random.Range(-30, 30), Vector3.up) * _faceDir.normalized * UnityEngine.Random.Range(5f, 20f) + transform.position;
         GameObject newFlower = GameObject.Instantiate(FlowerPrefab,
                                newPos,
-                               Quaternion.LookRotation(new Vector3(UnityEngine.Random.Range(-1,1),0, UnityEngine.Random.Range(-1,1))),
+                               Quaternion.LookRotation(new Vector3(UnityEngine.Random.Range(-1, 1), 0, UnityEngine.Random.Range(-1, 1))),
                                transform.parent);
         newFlower.GetComponent<Animator>().Play("bloom");
 

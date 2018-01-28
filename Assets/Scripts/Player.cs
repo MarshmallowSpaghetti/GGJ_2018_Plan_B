@@ -22,6 +22,10 @@ public class Player : MonoBehaviour
     public Flower startFlower;
     public Flower lastFlower;
 
+    private Color origin;
+
+    private bool m_isInCinematic = false;
+
     private Rigidbody m_rig;
     public Rigidbody Rig
     {
@@ -87,9 +91,10 @@ public class Player : MonoBehaviour
                 StopCoroutine(m_energyCosting);
                 m_energyCosting = null;
             }
-            m_energyCount = m_energyCountDown;
         };
         //m_energyCount = m_energyCountDown;
+
+        origin = Mat.GetColor("_EmissionColor");
     }
 
     private void Start()
@@ -105,6 +110,9 @@ public class Player : MonoBehaviour
 
     private void LaucnCheck()
     {
+        if (m_isInCinematic)
+            return;
+
         if (m_IsDisabled)
             return;
 
@@ -164,8 +172,9 @@ public class Player : MonoBehaviour
         ThisPlayerMove.IsFloating = false;
     }
 
-    private IEnumerator MoveToFlower(Flower _target)
+    public IEnumerator MoveToFlower(Flower _target)
     {
+        m_isInCinematic = true;
         skinRenderer.enabled = false;
 
         if (_target.HasLanded == false)
@@ -181,10 +190,13 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         yield return StartCoroutine(RaiseFromFlower(_target));
+
+        m_isInCinematic = false;
     }
 
     private IEnumerator RaiseFromFlower(Flower _target)
     {
+        Mat.SetColor("_EmissionColor", origin);
         skinRenderer.enabled = true;
 
         while (transform.position.y < _target.flowerCenter.position.y + 2f)
@@ -197,17 +209,18 @@ public class Player : MonoBehaviour
         Rig.velocity = Vector3.zero;
         lastFlower = startFlower;
         m_energyCount = m_energyCountDown;
+        m_IsDisabled = false;
         ThisPlayerMove.SetLaunchable();
 
-        Color origin = Mat.GetColor("_EmissionColor");
-        float startTime = Time.time + 0.2f;
-        float multipler = -Mathf.Cos((Time.time - startTime) * 1f) + 2;
-        print("value " + multipler);
+        //origin = Mat.GetColor("_EmissionColor");
+        float startTime = Time.time - 0.3f;
+        float multipler = -Mathf.Cos((Time.time - startTime) * 3f) + 2;
+        //print("value " + multipler);
         while (multipler > 1.01f)
         {
-            multipler = -Mathf.Cos((Time.time - startTime) * 1f) + 2;
-            print("value " + multipler);
-            Mat.SetColor("_EmissionColor", origin * multipler * 3f);
+            multipler = -Mathf.Cos((Time.time - startTime) * 3f) + 2;
+            //print("value " + multipler);
+            Mat.SetColor("_EmissionColor", origin * multipler * 1f);
 
             yield return null;
         }
