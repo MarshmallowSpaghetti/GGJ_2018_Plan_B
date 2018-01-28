@@ -171,7 +171,7 @@ public class Player : MonoBehaviour
         if (_target.HasLanded == false)
             _target.HasLanded = true;
 
-        while((transform.position - _target.flowerCenter.position).sqrMagnitude > 0.01f)
+        while ((transform.position - _target.flowerCenter.position).sqrMagnitude > 0.01f)
         {
             Rig.MovePosition(Vector3.Lerp(transform.position, _target.flowerCenter.position, 0.02f));
 
@@ -187,15 +187,31 @@ public class Player : MonoBehaviour
     {
         skinRenderer.enabled = true;
 
-        while(transform.position.y < _target.flowerCenter.position.y + 1)
+        while (transform.position.y < _target.flowerCenter.position.y + 2f)
         {
-            Rig.MovePosition(transform.position + Vector3.up * Time.deltaTime * 0.1f);
+            Rig.MovePosition(transform.position + Vector3.up * Time.deltaTime * 0.5f);
 
             yield return null;
         }
 
+        Rig.velocity = Vector3.zero;
         lastFlower = startFlower;
         m_energyCount = m_energyCountDown;
         ThisPlayerMove.SetLaunchable();
+
+        Color origin = Mat.GetColor("_EmissionColor");
+        float startTime = Time.time + 0.2f;
+        float multipler = -Mathf.Cos((Time.time - startTime) * 1f) + 2;
+        print("value " + multipler);
+        while (multipler > 1.01f)
+        {
+            multipler = -Mathf.Cos((Time.time - startTime) * 1f) + 2;
+            print("value " + multipler);
+            Mat.SetColor("_EmissionColor", origin * multipler * 3f);
+
+            yield return null;
+        }
+
+        Mat.SetColor("_EmissionColor", origin);
     }
 }
