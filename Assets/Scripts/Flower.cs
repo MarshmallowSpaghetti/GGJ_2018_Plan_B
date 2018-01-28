@@ -56,7 +56,7 @@ public class Flower : MonoBehaviour
         Action afterLanding = () =>
         {
             hasLanded = true;
-            StartCoroutine(MoveCameraToFlowerCenter(other.transform.forward));
+            StartCoroutine(MoveCameraToFlowerCenter(other.transform.parent.forward));
         };
 
         if (other.transform.parent.CompareTag("Player"))
@@ -95,19 +95,21 @@ public class Flower : MonoBehaviour
 
     private IEnumerator GrowNewOne(Vector3 _faceDir)
     {
-        Vector3 newPos = Quaternion.AngleAxis(UnityEngine.Random.Range(-30, 30), Vector3.up) * _faceDir.normalized * 20 + transform.position + Vector3.down * 5f;
+        Vector3 newPos = Quaternion.AngleAxis(UnityEngine.Random.Range(-30, 30), Vector3.up) * _faceDir.normalized * 20 + transform.position;
         GameObject newFlower = GameObject.Instantiate(FlowerPrefab,
                                newPos,
-                               Quaternion.identity,
+                               Quaternion.LookRotation(new Vector3(UnityEngine.Random.Range(-1,1),0, UnityEngine.Random.Range(-1,1))),
                                transform.parent);
+        newFlower.GetComponent<Animator>().Play("bloom");
 
-        int cnt = 100;
-        while (cnt > 0)
-        {
-            cnt--;
-            newFlower.transform.position += Vector3.up * 0.05f;
-            yield return null;
-        }
+        //int cnt = 150;
+        //while (cnt > 0)
+        //{
+        //    cnt--;
+        //    newFlower.transform.position += Vector3.up * 0.05f;
+        //    yield return null;
+        //}
+        yield return new WaitForSeconds(1.5f);
 
         print("Grow done");
     }
